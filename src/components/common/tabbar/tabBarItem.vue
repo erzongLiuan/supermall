@@ -41,7 +41,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .tabBar-item {
   flex: 1;
   text-align: center;

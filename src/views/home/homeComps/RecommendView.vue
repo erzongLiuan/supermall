@@ -1,6 +1,6 @@
 <template>
   <div class="RecommendView">
-    <div v-for="item in recommends" :key="item" class="recommends-item">
+    <div v-for="item in recommends" :key="item.id" class="recommends-item">
       <a :href="item.link">
         <img :src="item.image" alt="" />
         <div>{{ item.title }}</div>
@@ -23,7 +23,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .RecommendView {
   display: flex;
   width: 100%;
