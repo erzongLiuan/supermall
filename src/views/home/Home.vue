@@ -1,7 +1,14 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <scroll class="content">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="scrollPosition"
+      :pull-up-load="true"
+      @upLoadMore="upLoadMore"
+    >
       <home-swiper :banners="banners" />
       <recommend-view :recommends="recommends" />
       <feature-view />
@@ -12,6 +19,7 @@
       />
       <goods-list :goods="showGoods" />
     </scroll>
+    <back-top @click.native="BackClick" v-show="isShowBackTop" />
   </div>
 </template>
 
@@ -25,6 +33,7 @@ import NavBar from "../../components/common/navbar/NavBar.vue";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/goodsList";
 import Scroll from "components/common/scroll/Scroll";
+import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
@@ -39,6 +48,7 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
+    BackTop,
   },
 
   data() {
@@ -51,6 +61,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
+      isShowBackTop: false,
     };
   },
   computed: {
@@ -59,10 +70,19 @@ export default {
     },
   },
   created() {
+    //
     this.getHomeMultidata();
+
+    //
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+
+    //
+    this.$bus.$on("itemImageLoad", () => {
+      // console.log("--------");
+      this.$refs.scroll.refresh();
+    });
   },
   methods: {
     /**
@@ -82,6 +102,17 @@ export default {
           break;
       }
     },
+    BackClick() {
+      this.$refs.scroll.scrollTo(0, 0);
+      // console.log("back");
+    },
+    scrollPosition(position) {
+      // console.log(position);
+      this.isShowBackTop = position.y < -1000;
+    },
+    upLoadMore() {
+      this.getHomeGoods(this.currentType);
+    },
     /**
      * 网络请求相关方法
      */
@@ -98,6 +129,8 @@ export default {
         // console.log(res);
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page = page;
+
+        this.$refs.scroll.finishPullUp();
       });
     },
   },
