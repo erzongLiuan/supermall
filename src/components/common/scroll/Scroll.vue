@@ -32,24 +32,31 @@ export default {
       pullUpLoad: this.pullUpLoad,
       // observeeDom: true,
     });
-    this.scroll.on("scroll", (position) => {
-      // console.log(position);
-      this.$emit("scroll", position);
-    });
-    this.scroll.on("pullingUp", () => {
-      // console.log("ssss");
-      this.$emit("upLoadMore");
-    });
+    if (this.probeType === 2 || this.probeType === 3) {
+      this.scroll.on("scroll", (position) => {
+        // console.log(position);
+        this.$emit("scroll", position);
+      });
+    }
+    if (this.pullUpLoad) {
+      this.scroll.on("pullingUp", () => {
+        this.$emit("pullingUp");
+      });
+    }
   },
   methods: {
     scrollTo(x, y, time = 500) {
-      this.scroll.scrollTo(x, y, time);
-    },
-    finishPullUp() {
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.scrollTo(x, y, time);
     },
     refresh() {
-      this.scroll.refresh();
+      console.log("--------");
+      this.scroll && this.scroll.refresh();
+    },
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp();
+    },
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0;
     },
   },
 };
