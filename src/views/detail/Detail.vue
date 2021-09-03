@@ -1,14 +1,20 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="nav-bar" />
-    <scroll class="content" ref="scroll">
-      <detail-swiper :topImages="topImages" />
+    <detail-nav-bar class="nav-bar" ref="nav" @itemsClick="itemsClick" />
+    <scroll
+      class="content"
+      ref="scroll"
+      @scroll="contentScroll"
+      :probe-type="3"
+    >
+      <!-- 属性:topImage 传入值:top-image -->
+      <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
       <detail-goods-info :detail-info="detailInfo" @imageLoad="imageLoad" />
-      <detail-param-info :param-info="paramInfo" />
-      <detail-comment-info :comment="commentInfo" />
-      <goods-list :goods="recommends" />
+      <detail-param-info ref="param" :param-info="paramInfo" />
+      <detail-comment-info ref="comment" :comment="commentInfo" />
+      <goods-list ref="recommend" :goods="recommends" />
     </scroll>
   </div>
 </template>
@@ -32,6 +38,8 @@ import {
   GoodsParam,
   getRecommend,
 } from "network/detail.js";
+import { debounce } from "common/utils.js";
+import { itemListenerMixin } from "common/mixin.js";
 
 export default {
   name: "Detail",
@@ -46,7 +54,8 @@ export default {
     Scroll,
     GoodsList,
   },
-
+  // 加入混入
+  mixins: [itemListenerMixin],
   data() {
     return {
       iid: null,
@@ -57,6 +66,9 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommends: [],
+      themeTopYs: [],
+      getThemeTopYs: null,
+      scrollIntervalIndex: 0,
     };
   },
   created() {
@@ -93,11 +105,41 @@ export default {
       // console.log(res);
       this.recommends = res.data.list;
     });
+    this.getThemeTopYs = debounce(() => {
+      this.themeTopYs = [];
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.param.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      console.log(this.themeTopYs);
+    }, 200);
   },
-
+  mounted() {},
+  destroyed() {
+    this.$bus.$off("itemImageLoad", this.itemImgListener);
+  },
   methods: {
     imageLoad() {
-      this.$refs.scroll.refresh();
+      this.newRefresh();
+      this.getThemeTopYs();
+    },
+    itemsClick(index) {
+      // console.log(index);
+      this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200);
+    },
+    contentScroll(position) {
+      const positionY = -position.y;
+      if (positionY <= this.themeTopYs[1]) {
+        this.scrollIntervalIndex = 0;
+      } else if (positionY <= this.themeTopYs[2]) {
+        this.scrollIntervalIndex = 1;
+      } else if (positionY <= this.themeTopYs[3]) {
+        this.scrollIntervalIndex = 2;
+      } else {
+        this.scrollIntervalIndex = 3;
+      }
+      // console.log(this.scrollIntervalIndex);
+      this.$refs.nav.currentIndex = this.scrollIntervalIndex;
     },
   },
 };
