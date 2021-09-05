@@ -16,6 +16,7 @@
       <detail-comment-info ref="comment" :comment="commentInfo" />
       <goods-list ref="recommend" :goods="recommends" />
     </scroll>
+    <detail-bottom-bar />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import DetailBaseInfo from "./childcomps/DetailBaseInfo.vue";
 import DetailGoodsInfo from "./childcomps/DetailGoodsInfo.vue";
 import DetailParamInfo from "./childcomps/DetailParamInfo.vue";
 import DetailCommentInfo from "./childcomps/DetailCommentInfo.vue";
+import DetailBottomBar from "./childcomps/DetailBottomBar.vue";
 import GoodsList from "components/content/goods/goodsList";
 
 import Scroll from "components/common/scroll/Scroll";
@@ -51,6 +53,7 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
+    DetailBottomBar,
     Scroll,
     GoodsList,
   },
@@ -158,6 +161,6 @@ export default {
   background-color: #fff;
 }
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 49px);
 }
 </style>
