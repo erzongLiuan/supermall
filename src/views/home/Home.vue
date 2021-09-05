@@ -40,11 +40,10 @@ import NavBar from "../../components/common/navbar/NavBar.vue";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/goodsList";
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backTop/BackTop";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
 import { debounce } from "common/utils";
-import { itemListenerMixin } from "common/mixin.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
 export default {
   name: "Home",
@@ -57,9 +56,8 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banners: [],
@@ -70,7 +68,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isShowBackTop: false,
+
       tabControlOffsetTop: 0,
       isFixed: false,
       saveY: 0,
@@ -123,10 +121,7 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    BackClick() {
-      this.$refs.scroll.scrollTo(0, 0);
-      // console.log("back");
-    },
+
     scrollPosition(position) {
       // console.log(position);
       // 判断回到顶部在哪里出现

@@ -1,6 +1,11 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="nav-bar" ref="nav" @itemsClick="itemsClick" />
+    <div>
+      <ul v-for="item in $store.state.cartList" :key="item">
+        <li>{{ item }}</li>
+      </ul>
+    </div>
     <scroll
       class="content"
       ref="scroll"
@@ -15,8 +20,9 @@
       <detail-param-info ref="param" :param-info="paramInfo" />
       <detail-comment-info ref="comment" :comment="commentInfo" />
       <goods-list ref="recommend" :goods="recommends" />
+      <back-top @click.native="BackClick" v-show="isShowBackTop" />
     </scroll>
-    <detail-bottom-bar />
+    <detail-bottom-bar @addCart="addToCart" />
   </div>
 </template>
 
@@ -41,7 +47,7 @@ import {
   getRecommend,
 } from "network/detail.js";
 import { debounce } from "common/utils.js";
-import { itemListenerMixin } from "common/mixin.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
 export default {
   name: "Detail",
@@ -58,7 +64,7 @@ export default {
     GoodsList,
   },
   // 加入混入
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       iid: null,
@@ -72,6 +78,7 @@ export default {
       themeTopYs: [],
       getThemeTopYs: null,
       scrollIntervalIndex: 0,
+      isShowBackTop: false,
     };
   },
   created() {
@@ -131,6 +138,9 @@ export default {
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200);
     },
     contentScroll(position) {
+      // 判断回到顶部在哪里出现
+      this.isShowBackTop = position.y < -1000;
+
       const positionY = -position.y;
       if (positionY <= this.themeTopYs[1]) {
         this.scrollIntervalIndex = 0;
@@ -143,6 +153,18 @@ export default {
       }
       // console.log(this.scrollIntervalIndex);
       this.$refs.nav.currentIndex = this.scrollIntervalIndex;
+    },
+    addToCart() {
+      // 1.获取购物车里需要的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+
+      // 2.将商品添加到购物车里
+      this.$store.commit("addCart", product);
     },
   },
 };
