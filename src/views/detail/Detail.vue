@@ -1,11 +1,6 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="nav-bar" ref="nav" @itemsClick="itemsClick" />
-    <div>
-      <ul v-for="item in $store.state.cartList" :key="item">
-        <li>{{ item }}</li>
-      </ul>
-    </div>
     <scroll
       class="content"
       ref="scroll"
@@ -164,7 +159,7 @@ export default {
       product.iid = this.iid;
 
       // 2.将商品添加到购物车里
-      this.$store.commit("addCart", product);
+      this.$store.dispatch("addCart", product);
     },
   },
 };
