@@ -43,6 +43,8 @@ import {
 } from "network/detail.js";
 import { debounce } from "common/utils.js";
 import { itemListenerMixin, backTopMixin } from "common/mixin.js";
+// 将vuex里的actions函数进行映射
+import { mapActions } from "vuex";
 
 export default {
   name: "Detail",
@@ -124,6 +126,7 @@ export default {
     this.$bus.$off("itemImageLoad", this.itemImgListener);
   },
   methods: {
+    ...mapActions(["addCart"]),
     imageLoad() {
       this.newRefresh();
       this.getThemeTopYs();
@@ -159,7 +162,9 @@ export default {
       product.iid = this.iid;
 
       // 2.将商品添加到购物车里
-      this.$store.dispatch("addCart", product);
+      this.addCart(product).then((res) => {
+        this.$toast.show(res);
+      });
     },
   },
 };

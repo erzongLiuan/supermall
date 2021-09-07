@@ -9,7 +9,7 @@
       <div class="word">全选</div>
     </div>
     <div class="totalPrice">合计：{{ totalPrice }}</div>
-    <div class="caculate">去结算({{ checkCount }})</div>
+    <div class="caculate" @click="clacClick">去结算({{ checkCount }})</div>
   </div>
 </template>
 
@@ -59,6 +59,11 @@ export default {
         this.$store.state.cartList.forEach((item) => (item.checked = false));
       } else {
         this.$store.state.cartList.forEach((item) => (item.checked = true));
+      }
+    },
+    clacClick() {
+      this.$toast.show("请选择商品");
+      if (!this.isSelectAll) {
       }
     },
   },
