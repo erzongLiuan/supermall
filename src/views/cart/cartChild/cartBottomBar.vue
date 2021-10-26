@@ -73,6 +73,7 @@ export default {
 <style>
 .cart-bottom-bar {
   position: relative;
+  bottom: -6px;
   display: flex;
   height: 40px;
   background-color: #eee;

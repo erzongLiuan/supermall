@@ -3,7 +3,7 @@
     <div class="title">{{ goods.title }}</div>
 
     <div class="info">
-      <span class="n_price">￥{{ goods.lowNowPrice }}</span>
+      <span class="n_price">￥{{ goods.realPrice }}</span>
       <del>
         <span class="o_price">{{ goods.oldPrice }}</span>
       </del>

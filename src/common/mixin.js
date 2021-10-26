@@ -22,6 +22,7 @@ export const itemListenerMixin = {
 }
 
 export const backTopMixin = {
+
     data() {
         return {
             isShowBackTop: false,
@@ -34,6 +35,12 @@ export const backTopMixin = {
         BackClick() {
             this.$refs.scroll.scrollTo(0, 0);
             // console.log("back");
+        },
+        scrollPosition(position) {
+            // console.log(position);
+            // 判断回到顶部在哪里出现
+            this.isShowBackTop = position.y < -1000;
+
         },
     }
 }

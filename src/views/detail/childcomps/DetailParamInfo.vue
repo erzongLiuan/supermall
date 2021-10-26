@@ -3,10 +3,7 @@
     <table class="params_rule">
       <tbody>
         <tr v-for="(item, index) in paramInfo.sizes[0]" :key="index">
-          <th>{{ item[0] }}</th>
-          <td v-for="(td_item, td_index) in item.length - 1" :key="td_index">
-            {{ item[td_item] }}
-          </td>
+          <td v-for="(td, index) in item" :key="(td, index)">{{ td }}</td>
         </tr>
       </tbody>
     </table>

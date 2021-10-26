@@ -8,11 +8,11 @@
     <div class="score_info">
       <div class="score_left">
         <div class="score_sell">
-          <div>{{ sellValue }}万</div>
+          <div>{{ shop.sells }}</div>
           <div style="font-size: 0.6rem">总销量</div>
         </div>
         <div class="score_item">
-          <div>{{ shop.goods }}</div>
+          <div>{{ shop.goodsCount }}</div>
           <div style="font-size: 0.6rem">全部宝贝</div>
         </div>
       </div>

@@ -17,6 +17,7 @@
       <goods-list ref="recommend" :goods="recommends" />
       <back-top @click.native="BackClick" v-show="isShowBackTop" />
     </scroll>
+    <back-top @click.native="BackClick" v-show="isShowBackTop" />
     <detail-bottom-bar @addCart="addToCart" />
   </div>
 </template>
@@ -112,6 +113,7 @@ export default {
       // console.log(res);
       this.recommends = res.data.list;
     });
+    // 防抖函数，使得themeTopYs不被频繁的调用，之后在图片加载完成函数imageLoad中调用此函数。
     this.getThemeTopYs = debounce(() => {
       this.themeTopYs = [];
       this.themeTopYs.push(0);
@@ -128,6 +130,7 @@ export default {
   methods: {
     ...mapActions(["addCart"]),
     imageLoad() {
+      this.$refs.scroll.refresh();
       this.newRefresh();
       this.getThemeTopYs();
     },

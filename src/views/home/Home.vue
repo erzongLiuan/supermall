@@ -42,7 +42,6 @@ import GoodsList from "components/content/goods/goodsList";
 import Scroll from "components/common/scroll/Scroll";
 
 import { getHomeMultidata, getHomeGoods } from "network/home";
-import { debounce } from "common/utils";
 import { itemListenerMixin, backTopMixin } from "common/mixin.js";
 
 export default {
@@ -133,10 +132,13 @@ export default {
       // console.log("+++++++");
       this.getHomeGoods(this.currentType);
     },
-
+    BackClick() {
+      this.$refs.scroll.scrollTo(0, 0, 500);
+    },
     /**
      * 网络请求相关方法
      */
+    // 将created()里的请求数据函数做进一步的封装
     getHomeMultidata() {
       getHomeMultidata().then((res) => {
         // console.log(res);
@@ -150,7 +152,7 @@ export default {
         // console.log(res);
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page = page;
-        // 完成上拉加载
+        // 完成上拉加载 加载更多的数据
         this.$refs.scroll.finishPullUp();
       });
     },
